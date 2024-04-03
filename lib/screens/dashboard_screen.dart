@@ -1,3 +1,5 @@
+import 'package:admin_app/models/dashboard_btn_model.dart';
+import 'package:admin_app/widgets/dashboard_btn.dart';
 import 'package:admin_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -37,8 +39,24 @@ class DashboardScreenState extends State<DashboardScreen> {
           ),
         ],
       ),
-      body: const Center(
-        child: TitlesTextWidget(label: "Dashboard Screen"),
+      body: GridView.count(
+        crossAxisCount: 2,
+        childAspectRatio: 1,
+        children: List.generate(
+          3,
+          (index) => Padding(
+            padding: EdgeInsets.all(8.0),
+            child: DashboardButtonWidget(
+              title: DashBoardButtonModel.dashboardBtnList(context)[index].text,
+              imagePath: DashBoardButtonModel.dashboardBtnList(context)[index]
+                  .imagePath,
+              onPressed: () {
+                DashBoardButtonModel.dashboardBtnList(context)[index]
+                    .onPressed();
+              },
+            ),
+          ),
+        ),
       ),
     );
   }
