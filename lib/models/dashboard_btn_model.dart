@@ -1,3 +1,4 @@
+import 'package:admin_app/screens/edit_upload_product_form.dart';
 import 'package:admin_app/screens/inner_screens/orders/orders_screen.dart';
 import 'package:admin_app/screens/search_screen.dart';
 import 'package:admin_app/services/assets_manager.dart';
@@ -17,13 +18,15 @@ class DashBoardButtonModel {
           text: "Add a new product",
           imagePath: AssetsManager.cloud,
           onPressed: () {
-            Navigator.pushNamed(context, SearchScreen.routeName);
+            Navigator.pushNamed(context, UploadProductScreen.routName);
           },
         ),
         DashBoardButtonModel(
           text: "Inspect all products",
           imagePath: AssetsManager.shoppingCart,
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, SearchScreen.routeName);
+          },
         ),
         DashBoardButtonModel(
           text: "View Orders",

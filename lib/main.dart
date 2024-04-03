@@ -2,6 +2,7 @@ import 'package:admin_app/consts/theme_data.dart';
 import 'package:admin_app/providers/product_provider.dart';
 import 'package:admin_app/providers/theme_provider.dart';
 import 'package:admin_app/screens/dashboard_screen.dart';
+import 'package:admin_app/screens/edit_upload_product_form.dart';
 import 'package:admin_app/screens/inner_screens/orders/orders_screen.dart';
 import 'package:admin_app/screens/search_screen.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +42,8 @@ class MyApp extends StatelessWidget {
           routes: {
             OrdersScreenFree.routeName: (context) => const OrdersScreenFree(),
             SearchScreen.routeName: (context) => const SearchScreen(),
+            UploadProductScreen.routName: (context) =>
+                const UploadProductScreen(),
           },
         );
       }),
