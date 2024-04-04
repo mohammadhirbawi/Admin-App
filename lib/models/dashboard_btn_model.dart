@@ -18,7 +18,7 @@ class DashBoardButtonModel {
           text: "Add a new product",
           imagePath: AssetsManager.cloud,
           onPressed: () {
-            Navigator.pushNamed(context, UploadProductScreen.routName);
+            Navigator.pushNamed(context, EditOrUploadProductScreen.routeName);
           },
         ),
         DashBoardButtonModel(

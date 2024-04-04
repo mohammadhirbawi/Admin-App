@@ -1,4 +1,3 @@
-import 'package:admin_app/services/assets_manager.dart';
 import 'package:admin_app/widgets/subtitle_text.dart';
 import 'package:flutter/material.dart';
 

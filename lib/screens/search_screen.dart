@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/product_model.dart';
 import '../providers/product_provider.dart';
-import '../services/assets_manager.dart';
 import 'package:dynamic_height_grid_view/dynamic_height_grid_view.dart';
 
 import '../widgets/product_widget.dart';

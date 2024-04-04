@@ -3,7 +3,6 @@ import 'package:admin_app/widgets/dashboard_btn.dart';
 import 'package:admin_app/widgets/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../providers/theme_provider.dart';
 import '../services/assets_manager.dart';
 
@@ -19,7 +18,6 @@ class DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: const TitlesTextWidget(label: "Dashboard Screen"),

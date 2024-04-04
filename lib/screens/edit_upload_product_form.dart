@@ -1,22 +1,30 @@
+import 'dart:io';
+
 import 'package:admin_app/consts/app_constants.dart';
-import 'package:admin_app/consts/my_validators.dart';
 import 'package:admin_app/services/my_app_method.dart';
 import 'package:admin_app/widgets/subtitle_text.dart';
-import 'package:admin_app/widgets/title_text.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
-class UploadProductScreen extends StatefulWidget {
-  static const routName = '/EditOrUploadProductScreen';
 
-  const UploadProductScreen({super.key});
+import '../consts/my_validators.dart';
+import '../widgets/title_text.dart';
+
+class EditOrUploadProductScreen extends StatefulWidget {
+  static const routeName = '/EditOrUploadProductScreen';
+
+  const EditOrUploadProductScreen({
+    super.key,
+  });
 
   @override
-  State<UploadProductScreen> createState() => _UploadProductScreenState();
+  State<EditOrUploadProductScreen> createState() =>
+      _EditOrUploadProductScreenState();
 }
 
-class _UploadProductScreenState extends State<UploadProductScreen> {
+class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
   final _formKey = GlobalKey<FormState>();
   XFile? _pickedImage;
 
@@ -58,9 +66,7 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
     });
   }
 
-  //Upload Function
   Future<void> _uploadProduct() async {
-    FocusScope.of(context).unfocus();
     if (_categoryValue == null) {
       MyAppMethods.showErrorORWarningDialog(
         context: context,
@@ -70,11 +76,10 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
       return;
     }
     final isValid = _formKey.currentState!.validate();
-
+    FocusScope.of(context).unfocus();
     if (isValid) {}
   }
 
-  //Edit Function
   Future<void> _editProduct() async {
     final isValid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
@@ -110,82 +115,148 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-          bottomSheet: SizedBox(
-            height: kBottomNavigationBarHeight + 10,
-            child: Material(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.all(12),
-                      backgroundColor: Colors.red,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          10,
-                        ),
+        bottomSheet: SizedBox(
+          height: kBottomNavigationBarHeight + 10,
+          child: Material(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.all(12),
+                    backgroundColor: Colors.red,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        10,
                       ),
                     ),
-                    icon: const Icon(Icons.clear),
-                    label: const Text(
-                      "Clear",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    onPressed: () {},
                   ),
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.all(12),
-                      backgroundColor: Colors.red,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          10,
-                        ),
+                  icon: const Icon(Icons.clear),
+                  label: const Text(
+                    "Clear",
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                  onPressed: () {},
+                ),
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.all(12),
+                    // backgroundColor: Colors.red,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        10,
                       ),
                     ),
-                    icon: const Icon(Icons.upload),
-                    label: const Text(
-                      "Upload Product",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    onPressed: () {
-                      _uploadProduct();
-                    },
                   ),
-                ],
-              ),
+                  icon: const Icon(Icons.upload),
+                  label: const Text(
+                    "Upload Product",
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                  onPressed: () {
+                    _uploadProduct();
+                  },
+                ),
+              ],
             ),
           ),
-          appBar: AppBar(
-            centerTitle: true,
-            title: const TitlesTextWidget(
-              label: "Upload a new product",
-            ),
+        ),
+        appBar: AppBar(
+          centerTitle: true,
+          title: const TitlesTextWidget(
+            label: "Upload a new product",
           ),
-          body: SafeArea(
-              child: SingleChildScrollView(
+        ),
+        body: SafeArea(
+          child: SingleChildScrollView(
             child: Column(
               children: [
                 const SizedBox(
                   height: 20,
                 ),
-
-                /* Image Picker Here */
+                if (_pickedImage == null) ...[
+                  SizedBox(
+                    width: size.width * 0.4 + 10,
+                    height: size.width * 0.4,
+                    child: DottedBorder(
+                        color: Colors.blue,
+                        radius: const Radius.circular(12),
+                        child: Center(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.image_outlined,
+                                size: 80,
+                                color: Colors.blue,
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  localImagePicker();
+                                },
+                                child: const Text("Pick Product image"),
+                              ),
+                            ],
+                          ),
+                        )),
+                  ),
+                ] else ...[
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.file(
+                      File(
+                        _pickedImage!.path,
+                      ),
+                      // width: size.width * 0.7,
+                      height: size.width * 0.5,
+                      alignment: Alignment.center,
+                    ),
+                  ),
+                ],
+                if (_pickedImage != null) ...[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          localImagePicker();
+                        },
+                        child: const Text("Pick another image"),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          removePickedImage();
+                        },
+                        child: const Text(
+                          "Remove image",
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
                 const SizedBox(
                   height: 25,
                 ),
-                DropdownButton(
-                    hint: const Text("Select Category"),
-                    value: _categoryValue,
-                    items: AppConstants.categoriesDropDownList,
-                    onChanged: (
-                      String? value,
-                    ) {
-                      setState(() {
-                        _categoryValue = value;
-                      });
-                    }),
+                DropdownButton<String>(
+                  hint: const Text("Select Category"),
+                  value: _categoryValue,
+                  items: AppConstants.categoriesDropDownList,
+                  onChanged: (String? value) {
+                    setState(() {
+                      _categoryValue = value;
+                    });
+                  },
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
@@ -195,7 +266,7 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
                       children: [
                         TextFormField(
                           controller: _titleController,
-                          key: const ValueKey("Title"),
+                          key: const ValueKey('Title'),
                           maxLength: 80,
                           minLines: 1,
                           maxLines: 2,
@@ -224,17 +295,16 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
                                 keyboardType: TextInputType.number,
                                 inputFormatters: <TextInputFormatter>[
                                   FilteringTextInputFormatter.allow(
-                                    RegExp(r'(\d+)?\.\d{0,2}'),
+                                    RegExp(r'^(\d+)?\.?\d{0,2}'),
                                   ),
                                 ],
                                 decoration: const InputDecoration(
-                                  hintText: "price",
-                                  prefix: SubtitleTextWidget(
-                                    label: "\$",
-                                    color: Colors.blue,
-                                    fontSize: 16,
-                                  ),
-                                ),
+                                    hintText: 'Price',
+                                    prefix: SubtitleTextWidget(
+                                      label: "\$ ",
+                                      color: Colors.blue,
+                                      fontSize: 16,
+                                    )),
                                 validator: (value) {
                                   return MyValidators.uploadProdTexts(
                                     value: value,
@@ -253,24 +323,22 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
                                   FilteringTextInputFormatter.digitsOnly
                                 ],
                                 controller: _quantityController,
-                                key: const ValueKey('Quantity'),
                                 keyboardType: TextInputType.number,
+                                key: const ValueKey('Quantity'),
                                 decoration: const InputDecoration(
-                                  hintText: "Qty",
+                                  hintText: 'Qty',
                                 ),
                                 validator: (value) {
                                   return MyValidators.uploadProdTexts(
                                     value: value,
-                                    toBeReturnedString: "Quantity is missing",
+                                    toBeReturnedString: "Quantity is missed",
                                   );
                                 },
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 15,
-                        ),
+                        const SizedBox(height: 15),
                         TextFormField(
                           key: const ValueKey('Description'),
                           controller: _descriptionController,
@@ -279,12 +347,12 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
                           maxLength: 1000,
                           textCapitalization: TextCapitalization.sentences,
                           decoration: const InputDecoration(
-                            hintText: "Product description",
+                            hintText: 'Product description',
                           ),
                           validator: (value) {
                             return MyValidators.uploadProdTexts(
                               value: value,
-                              toBeReturnedString: "Description is missing",
+                              toBeReturnedString: "Description is missed",
                             );
                           },
                           onTap: () {},
@@ -298,7 +366,9 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
                 )
               ],
             ),
-          ))),
+          ),
+        ),
+      ),
     );
   }
 }
