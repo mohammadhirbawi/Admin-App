@@ -6,11 +6,14 @@ class AppConstants {
 
   static List<String> categoriesList = [
     'Phones',
-    'Clothes',
-    'Beauty',
-    'Shoes',
-    'Funiture',
+    'Laptops',
+    'Electronics',
     'Watches',
+    'Clothes',
+    'Shoes',
+    'Books',
+    'Cosmetics',
+    "Accessories",
   ];
 
   static List<DropdownMenuItem<String>>? get categoriesDropDownList {
