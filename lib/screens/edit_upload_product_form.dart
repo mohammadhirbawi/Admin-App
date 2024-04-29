@@ -178,7 +178,75 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
       );
       return;
     }
-    if (isValid) {}
+    if (_categoryValue == null) {
+      MyAppMethods.showErrorORWarningDialog(
+        context: context,
+        subtitle: "Category is empty",
+        fct: () {},
+      );
+
+      return;
+    }
+    if (isValid) {
+      _formKey.currentState!.save();
+      try {
+        setState(() {
+          _isLoading = true;
+        });
+        if (_pickedImage != null) {
+          final ref = FirebaseStorage.instance
+              .ref()
+              .child("productsImages")
+              .child('${_titleController.text.trim()}.jpg');
+          await ref.putFile(File(_pickedImage!.path));
+          productImageUrl = await ref.getDownloadURL();
+        }
+
+        await FirebaseFirestore.instance
+            .collection("products")
+            .doc(widget.productModel!.productId)
+            .update({
+          'productId': widget.productModel!.productId,
+          'productTitle': _titleController.text,
+          'productPrice': _priceController.text,
+          'productImage': productImageUrl ?? productNetworkImage,
+          'productCategory': _categoryValue,
+          'productDescription': _descriptionController.text,
+          'productQuantity': _quantityController.text,
+          'createdAt': Timestamp.now(),
+        });
+        Fluttertoast.showToast(
+          msg: "Product has been edited",
+          toastLength: Toast.LENGTH_SHORT,
+          textColor: Colors.white,
+        );
+        if (!mounted) return;
+        await MyAppMethods.showErrorORWarningDialog(
+          isError: false,
+          context: context,
+          subtitle: "Clear Form?",
+          fct: () {
+            clearForm();
+          },
+        );
+      } on FirebaseException catch (error) {
+        await MyAppMethods.showErrorORWarningDialog(
+          context: context,
+          subtitle: "An error has been occured ${error.message}",
+          fct: () {},
+        );
+      } catch (error) {
+        await MyAppMethods.showErrorORWarningDialog(
+          context: context,
+          subtitle: "An error has been occured $error",
+          fct: () {},
+        );
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   Future<void> localImagePicker() async {
@@ -187,11 +255,15 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
       context: context,
       cameraFCT: () async {
         _pickedImage = await picker.pickImage(source: ImageSource.camera);
-        setState(() {});
+        setState(() {
+          productNetworkImage = null;
+        });
       },
       galleryFCT: () async {
         _pickedImage = await picker.pickImage(source: ImageSource.gallery);
-        setState(() {});
+        setState(() {
+          productNetworkImage = null;
+        });
       },
       removeFCT: () {
         setState(() {
@@ -328,7 +400,7 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
                       ),
                     ),
                   ],
-                  if (_pickedImage != null && productNetworkImage != null) ...[
+                  if (_pickedImage != null || productNetworkImage != null) ...[
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

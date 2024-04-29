@@ -53,11 +53,27 @@ class _SearchScreenState extends State<SearchScreen> {
             //   child: Image.asset(AssetsManager.shoppingCart),
             //  ),
           ),
-          body: productList.isEmpty
-              ? const Center(
-                  child: TitlesTextWidget(label: "No product found"),
-                )
-              : Padding(
+          body: StreamBuilder<List<ProductModel>>(
+              stream: productProvider.fetchProductStream(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: TitlesTextWidget(
+                      label: snapshot.error.toString(),
+                    ),
+                  );
+                } else if (snapshot.data == null) {
+                  return const Center(
+                    child: TitlesTextWidget(
+                      label: "No product has been added",
+                    ),
+                  );
+                }
+                return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     children: [
@@ -72,10 +88,10 @@ class _SearchScreenState extends State<SearchScreen> {
                           prefixIcon: const Icon(Icons.search),
                           suffixIcon: GestureDetector(
                             onTap: () {
-                              // setState(() {
-                              searchTextController.clear();
-                              FocusScope.of(context).unfocus();
-                              // });
+                              setState(() {
+                                searchTextController.clear();
+                                FocusScope.of(context).unfocus();
+                              });
                             },
                             child: const Icon(
                               Icons.clear,
@@ -84,10 +100,11 @@ class _SearchScreenState extends State<SearchScreen> {
                           ),
                         ),
                         onChanged: (value) {
-                          // setState(() {
-                          //   productListSearch = productProvider.searchQuery(
-                          //       searchText: searchTextController.text);
-                          // });
+                          //setState(() {
+                          //productListSearch = productProvider.searchQuery(
+                          //  searchText: searchTextController.text,
+                          //passedList: productList);
+                          //});
                         },
                         onSubmitted: (value) {
                           setState(() {
@@ -125,7 +142,8 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                     ],
                   ),
-                )),
+                );
+              })),
     );
   }
 }

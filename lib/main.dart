@@ -33,54 +33,56 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // final themeProvider = Provider.of<ThemeProvider>(context);
-    return FutureBuilder(
-        future: Firebase.initializeApp(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            const Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          } else if (snapshot.hasError) {
-            return Scaffold(
-              body: Center(
-                child: SelectableText(
-                    "An error has been occured ${snapshot.error}"),
-              ),
-            );
-          }
-          return MultiProvider(
-            providers: [
-              ChangeNotifierProvider(
-                create: (_) => ThemeProvider(),
-              ),
-              ChangeNotifierProvider(
-                create: (_) => ProductProvider(),
-              ),
-            ],
-            child: Consumer<ThemeProvider>(builder: (
-              context,
-              themeProvider,
-              child,
-            ) {
-              return MaterialApp(
-                debugShowCheckedModeBanner: false,
-                title: 'Shop Smart ADMIN AR',
-                theme: Styles.themeData(
-                    isDarkTheme: themeProvider.getIsDarkTheme,
-                    context: context),
-                home: const DashboardScreen(),
-                routes: {
-                  OrdersScreenFree.routeName: (context) =>
-                      const OrdersScreenFree(),
-                  SearchScreen.routeName: (context) => const SearchScreen(),
-                  EditOrUploadProductScreen.routeName: (context) =>
-                      const EditOrUploadProductScreen(),
-                },
+    return MaterialApp(
+      home: FutureBuilder(
+          future: Firebase.initializeApp(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
+                ),
               );
-            }),
-          );
-        });
+            } else if (snapshot.hasError) {
+              return Scaffold(
+                body: Center(
+                  child: SelectableText(
+                      "An error has been occured ${snapshot.error}"),
+                ),
+              );
+            }
+            return MultiProvider(
+              providers: [
+                ChangeNotifierProvider(
+                  create: (_) => ThemeProvider(),
+                ),
+                ChangeNotifierProvider(
+                  create: (_) => ProductProvider(),
+                ),
+              ],
+              child: Consumer<ThemeProvider>(builder: (
+                context,
+                themeProvider,
+                child,
+              ) {
+                return MaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  title: 'Shop Smart ADMIN AR',
+                  theme: Styles.themeData(
+                      isDarkTheme: themeProvider.getIsDarkTheme,
+                      context: context),
+                  home: const DashboardScreen(),
+                  routes: {
+                    OrdersScreenFree.routeName: (context) =>
+                        const OrdersScreenFree(),
+                    SearchScreen.routeName: (context) => const SearchScreen(),
+                    EditOrUploadProductScreen.routeName: (context) =>
+                        const EditOrUploadProductScreen(),
+                  },
+                );
+              }),
+            );
+          }),
+    );
   }
 }
