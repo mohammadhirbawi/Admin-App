@@ -112,14 +112,15 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
         setState(() {
           _isLoading = true;
         });
+                final productID = const Uuid().v4();
+
         final ref = FirebaseStorage.instance
             .ref()
             .child("productsImages")
-            .child('${_titleController.text.trim()}.jpg');
+            .child('$productID.jpg');
         await ref.putFile(File(_pickedImage!.path));
         productImageUrl = await ref.getDownloadURL();
 
-        final productID = const Uuid().v4();
         await FirebaseFirestore.instance
             .collection("products")
             .doc(productID)
@@ -197,7 +198,7 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
           final ref = FirebaseStorage.instance
               .ref()
               .child("productsImages")
-              .child('${_titleController.text.trim()}.jpg');
+              .child('${widget.productModel!.productId}.jpg');
           await ref.putFile(File(_pickedImage!.path));
           productImageUrl = await ref.getDownloadURL();
         }
