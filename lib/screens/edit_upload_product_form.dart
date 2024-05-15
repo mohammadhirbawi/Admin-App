@@ -4,16 +4,15 @@ import 'package:admin_app/consts/app_constants.dart';
 import 'package:admin_app/models/product_model.dart';
 import 'package:admin_app/screens/inner_screens/loading_manager.dart';
 import 'package:admin_app/services/my_app_method.dart';
-import 'package:admin_app/widgets/app_name_text.dart';
 import 'package:admin_app/widgets/subtitle_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
 import '../consts/my_validators.dart';
 import '../widgets/title_text.dart';
@@ -43,6 +42,7 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
       _quantityController;
   String? _categoryValue;
   String? productImageUrl;
+
   @override
   void initState() {
     if (widget.productModel != null) {
@@ -90,20 +90,29 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
     final isValid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
     if (_pickedImage == null) {
-      MyAppMethods.showErrorORWarningDialog(
+      showToast(
+        "Make sure to pick up an image",
         context: context,
-        subtitle: "Make sure to pick up an image",
-        fct: () {},
+        backgroundColor: Colors.red,
+        textStyle: const TextStyle(color: Colors.white),
+        position: StyledToastPosition.bottom,
+        animation: StyledToastAnimation.slideFromBottomFade,
+        reverseAnimation: StyledToastAnimation.fade,
+        duration: const Duration(seconds: 4),
       );
       return;
     }
     if (_categoryValue == null) {
-      MyAppMethods.showErrorORWarningDialog(
+      showToast(
+        "Category is empty",
         context: context,
-        subtitle: "Category is empty",
-        fct: () {},
+        backgroundColor: Colors.red,
+        textStyle: const TextStyle(color: Colors.white),
+        position: StyledToastPosition.bottom,
+        animation: StyledToastAnimation.slideFromBottomFade,
+        reverseAnimation: StyledToastAnimation.fade,
+        duration: const Duration(seconds: 4),
       );
-
       return;
     }
     if (isValid) {
@@ -112,7 +121,7 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
         setState(() {
           _isLoading = true;
         });
-                final productID = const Uuid().v4();
+        final productID = const Uuid().v4();
 
         final ref = FirebaseStorage.instance
             .ref()
@@ -134,30 +143,28 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
           'productQuantity': _quantityController.text,
           'createdAt': Timestamp.now(),
         });
-        Fluttertoast.showToast(
-          msg: "Product has been added",
-          toastLength: Toast.LENGTH_SHORT,
-          textColor: Colors.white,
-        );
         if (!mounted) return;
-        await MyAppMethods.showErrorORWarningDialog(
-          isError: false,
+        showToast(
+          "Product added successfully",
           context: context,
-          subtitle: "Clear Form?",
-          fct: () {
-            clearForm();
-          },
+          backgroundColor: Colors.green,
+          textStyle: const TextStyle(color: Colors.white),
+          position: StyledToastPosition.bottom,
+          animation: StyledToastAnimation.slideFromBottomFade,
+          reverseAnimation: StyledToastAnimation.fade,
+          duration: const Duration(seconds: 4),
         );
+        clearForm();
       } on FirebaseException catch (error) {
         await MyAppMethods.showErrorORWarningDialog(
           context: context,
-          subtitle: "An error has been occured ${error.message}",
+          subtitle: "An error has occurred ${error.message}",
           fct: () {},
         );
       } catch (error) {
         await MyAppMethods.showErrorORWarningDialog(
           context: context,
-          subtitle: "An error has been occured $error",
+          subtitle: "An error has occurred $error",
           fct: () {},
         );
       } finally {
@@ -172,20 +179,29 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
     final isValid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
     if (_pickedImage == null && productNetworkImage == null) {
-      MyAppMethods.showErrorORWarningDialog(
+      showToast(
+        "Please pick up an image",
         context: context,
-        subtitle: "Please pick up an image",
-        fct: () {},
+        backgroundColor: Colors.red,
+        textStyle: const TextStyle(color: Colors.white),
+        position: StyledToastPosition.bottom,
+        animation: StyledToastAnimation.slideFromBottomFade,
+        reverseAnimation: StyledToastAnimation.fade,
+        duration: const Duration(seconds: 4),
       );
       return;
     }
     if (_categoryValue == null) {
-      MyAppMethods.showErrorORWarningDialog(
+      showToast(
+        "Category is empty",
         context: context,
-        subtitle: "Category is empty",
-        fct: () {},
+        backgroundColor: Colors.red,
+        textStyle: const TextStyle(color: Colors.white),
+        position: StyledToastPosition.bottom,
+        animation: StyledToastAnimation.slideFromBottomFade,
+        reverseAnimation: StyledToastAnimation.fade,
+        duration: const Duration(seconds: 4),
       );
-
       return;
     }
     if (isValid) {
@@ -216,30 +232,28 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
           'productQuantity': _quantityController.text,
           'createdAt': Timestamp.now(),
         });
-        Fluttertoast.showToast(
-          msg: "Product has been edited",
-          toastLength: Toast.LENGTH_SHORT,
-          textColor: Colors.white,
-        );
         if (!mounted) return;
-        await MyAppMethods.showErrorORWarningDialog(
-          isError: false,
+        showToast(
+          "Product updated successfully",
           context: context,
-          subtitle: "Clear Form?",
-          fct: () {
-            clearForm();
-          },
+          backgroundColor: Colors.green,
+          textStyle: const TextStyle(color: Colors.white),
+          position: StyledToastPosition.bottom,
+          animation: StyledToastAnimation.slideFromBottomFade,
+          reverseAnimation: StyledToastAnimation.fade,
+          duration: const Duration(seconds: 4),
         );
+        clearForm();
       } on FirebaseException catch (error) {
         await MyAppMethods.showErrorORWarningDialog(
           context: context,
-          subtitle: "An error has been occured ${error.message}",
+          subtitle: "An error has occurred ${error.message}",
           fct: () {},
         );
       } catch (error) {
         await MyAppMethods.showErrorORWarningDialog(
           context: context,
-          subtitle: "An error has been occured $error",
+          subtitle: "An error has occurred $error",
           fct: () {},
         );
       } finally {
@@ -247,6 +261,56 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
           _isLoading = false;
         });
       }
+    }
+  }
+
+  Future<void> _deleteProduct() async {
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+
+      // Delete the product image from Firebase Storage
+      final ref = FirebaseStorage.instance
+          .ref()
+          .child("productsImages")
+          .child('${widget.productModel!.productId}.jpg');
+      await ref.delete();
+
+      // Delete the product from Firestore
+      await FirebaseFirestore.instance
+          .collection("products")
+          .doc(widget.productModel!.productId)
+          .delete();
+
+      if (!mounted) return;
+      showToast(
+        "Product deleted successfully",
+        context: context,
+        backgroundColor: Colors.green,
+        textStyle: const TextStyle(color: Colors.white),
+        position: StyledToastPosition.bottom,
+        animation: StyledToastAnimation.slideFromBottomFade,
+        reverseAnimation: StyledToastAnimation.fade,
+        duration: const Duration(seconds: 4),
+      );
+      Navigator.of(context).pop();
+    } on FirebaseException catch (error) {
+      await MyAppMethods.showErrorORWarningDialog(
+        context: context,
+        subtitle: "An error has occurred ${error.message}",
+        fct: () {},
+      );
+    } catch (error) {
+      await MyAppMethods.showErrorORWarningDialog(
+        context: context,
+        subtitle: "An error has occurred $error",
+        fct: () {},
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -274,6 +338,17 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
     );
   }
 
+  Future<void> _showClearFormDialog() async {
+    await MyAppMethods.showErrorORWarningDialog(
+      isError: false,
+      context: context,
+      subtitle: "Clear Form?",
+      fct: () {
+        clearForm();
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -296,9 +371,7 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
                       padding: const EdgeInsets.all(12),
                       backgroundColor: Colors.red,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          10,
-                        ),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                     icon: const Icon(Icons.clear),
@@ -308,16 +381,13 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
                         fontSize: 20,
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: _showClearFormDialog, // Show dialog on clear
                   ),
                   ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(12),
-                      // backgroundColor: Colors.red,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          10,
-                        ),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                     icon: const Icon(Icons.upload),
@@ -344,6 +414,14 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
             title: const TitlesTextWidget(
               label: "Upload a new product",
             ),
+            actions: isEditing
+                ? [
+              IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: _deleteProduct,
+              ),
+            ]
+                : null,
           ),
           body: SafeArea(
             child: SingleChildScrollView(
@@ -366,36 +444,32 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
                       width: size.width * 0.4 + 10,
                       height: size.width * 0.4,
                       child: DottedBorder(
-                          color: Colors.blue,
-                          radius: const Radius.circular(12),
-                          child: Center(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  Icons.image_outlined,
-                                  size: 80,
-                                  color: Colors.blue,
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    localImagePicker();
-                                  },
-                                  child: const Text("Pick Product image"),
-                                ),
-                              ],
-                            ),
-                          )),
+                        color: Colors.blue,
+                        radius: const Radius.circular(12),
+                        child: Center(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.image_outlined,
+                                size: 80,
+                                color: Colors.blue,
+                              ),
+                              TextButton(
+                                onPressed: localImagePicker,
+                                child: const Text("Pick Product image"),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                   ] else ...[
                     ClipRRect(
                       borderRadius: BorderRadius.circular(12),
                       child: Image.file(
-                        File(
-                          _pickedImage!.path,
-                        ),
-                        // width: size.width * 0.7,
+                        File(_pickedImage!.path),
                         height: size.width * 0.5,
                         alignment: Alignment.center,
                       ),
@@ -406,15 +480,11 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         TextButton(
-                          onPressed: () {
-                            localImagePicker();
-                          },
+                          onPressed: localImagePicker,
                           child: const Text("Pick another image"),
                         ),
                         TextButton(
-                          onPressed: () {
-                            removePickedImage();
-                          },
+                          onPressed: removePickedImage,
                           child: const Text(
                             "Remove image",
                             style: TextStyle(color: Colors.red),
@@ -441,7 +511,7 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
                   ),
                   Padding(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                     child: Form(
                       key: _formKey,
                       child: Column(
@@ -461,7 +531,7 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
                               return MyValidators.uploadProdTexts(
                                 value: value,
                                 toBeReturnedString:
-                                    "Please enter a valid title",
+                                "Please enter a valid title",
                               );
                             },
                           ),
@@ -482,12 +552,13 @@ class _EditOrUploadProductScreenState extends State<EditOrUploadProductScreen> {
                                     ),
                                   ],
                                   decoration: const InputDecoration(
-                                      hintText: 'Price',
-                                      prefix: SubtitleTextWidget(
-                                        label: "\$ ",
-                                        color: Colors.blue,
-                                        fontSize: 16,
-                                      )),
+                                    hintText: 'Price',
+                                    prefix: SubtitleTextWidget(
+                                      label: "\$ ",
+                                      color: Colors.blue,
+                                      fontSize: 16,
+                                    ),
+                                  ),
                                   validator: (value) {
                                     return MyValidators.uploadProdTexts(
                                       value: value,
