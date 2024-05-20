@@ -7,11 +7,11 @@ class AppConstants {
   static List<String> categoriesList = [
     'IOT',
     'Sensors',
-    'Network',
+    'Wireless',
     'RaspberryPi',
     'Arduino',
     'Display',
-    'Microcontroller',
+    'Components',
     'Modules',
   ];
 
