@@ -43,7 +43,7 @@ class DashboardScreenState extends State<DashboardScreen> {
         children: List.generate(
           3,
           (index) => Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: DashboardButtonWidget(
               title: DashBoardButtonModel.dashboardBtnList(context)[index].text,
               imagePath: DashBoardButtonModel.dashboardBtnList(context)[index]

@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import '../../../services/my_app_method.dart';
 
-class OrdersWidgetFree extends StatefulWidget {
+class OrdersWidget extends StatefulWidget {
   final String orderId;
   final String productTitle;
   final double price;
@@ -14,7 +14,7 @@ class OrdersWidgetFree extends StatefulWidget {
   final String imageUrl;
   final String username;
 
-  const OrdersWidgetFree({
+  const OrdersWidget({
     required this.orderId,
     required this.productTitle,
     required this.price,
@@ -25,10 +25,10 @@ class OrdersWidgetFree extends StatefulWidget {
   });
 
   @override
-  State<OrdersWidgetFree> createState() => _OrdersWidgetFreeState();
+  State<OrdersWidget> createState() => _OrdersWidgetState();
 }
 
-class _OrdersWidgetFreeState extends State<OrdersWidgetFree> {
+class _OrdersWidgetState extends State<OrdersWidget> {
   bool isLoading = false;
 
   @override
@@ -112,7 +112,7 @@ class _OrdersWidgetFreeState extends State<OrdersWidgetFree> {
                       ),
                       Flexible(
                         child: SubtitleTextWidget(
-                          label: "${widget.price.toStringAsFixed(2)} \$",
+                          label: "${widget.price.toStringAsFixed(2)} \₪",
                           fontSize: 15,
                           color: Colors.blue,
                         ),
@@ -130,7 +130,7 @@ class _OrdersWidgetFreeState extends State<OrdersWidgetFree> {
                     height: 5,
                   ),
                   SubtitleTextWidget(
-                    label: "Total: ${totalPrice.toStringAsFixed(2)} \$",
+                    label: "Total: ${totalPrice.toStringAsFixed(2)} \₪",
                     fontSize: 15,
                   ),
                   const SizedBox(

@@ -48,7 +48,7 @@ class _OrdersScreenFreeState extends State<OrdersScreenFree> {
               final orderData = orders[index];
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 6),
-                child: OrdersWidgetFree(
+                child: OrdersWidget(
                   orderId: orderData['orderId'],
                   productTitle: orderData['productTitle'],
                   price: orderData['price'],

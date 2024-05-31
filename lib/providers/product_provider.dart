@@ -55,7 +55,6 @@ class ProductProvider with ChangeNotifier {
     try {
       return productDB.snapshots().map((snapshot) {
         _products.clear();
-        //_products = [];
         for (var element in snapshot.docs) {
           _products.insert(0, ProductModel.fromFirestore(element));
         }
