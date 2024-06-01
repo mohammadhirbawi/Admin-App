@@ -1,12 +1,12 @@
-import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import '../../../widgets/subtitle_text.dart';
 import '../../../widgets/title_text.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
-import '../../../services/my_app_method.dart';
+import '../../../providers/orders_provider.dart';
 
-class OrdersWidget extends StatefulWidget {
+class OrdersWidget extends StatelessWidget {
   final String orderId;
   final String productTitle;
   final double price;
@@ -25,16 +25,9 @@ class OrdersWidget extends StatefulWidget {
   });
 
   @override
-  State<OrdersWidget> createState() => _OrdersWidgetState();
-}
-
-class _OrdersWidgetState extends State<OrdersWidget> {
-  bool isLoading = false;
-
-  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    double totalPrice = widget.price * widget.quantity;
+    double totalPrice = price * quantity;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -45,7 +38,7 @@ class _OrdersWidgetState extends State<OrdersWidget> {
             child: FancyShimmerImage(
               height: size.width * 0.25,
               width: size.width * 0.25,
-              imageUrl: widget.imageUrl,
+              imageUrl: imageUrl,
             ),
           ),
           Flexible(
@@ -59,7 +52,7 @@ class _OrdersWidgetState extends State<OrdersWidget> {
                     children: [
                       Flexible(
                         child: TitlesTextWidget(
-                          label: widget.productTitle,
+                          label: productTitle,
                           maxLines: 2,
                           fontSize: 15,
                         ),
@@ -67,33 +60,21 @@ class _OrdersWidgetState extends State<OrdersWidget> {
                       IconButton(
                         onPressed: () async {
                           try {
-                            setState(() {
-                              isLoading = true;
-                            });
-                            await FirebaseFirestore.instance
-                                .collection('ordersAdvanced')
-                                .doc(widget.orderId)
-                                .delete();
-                            showToast(
-                              'Order deleted successfully',
-                              context: context,
-                              backgroundColor: Colors.green,
-                              textStyle: const TextStyle(color: Colors.white),
-                              position: StyledToastPosition.bottom,
-                              animation: StyledToastAnimation.slideFromBottomFade,
-                              reverseAnimation: StyledToastAnimation.fade,
-                              duration: const Duration(seconds: 4),
-                            );
+                            await Provider.of<OrdersProvider>(context, listen: false).deleteOrder(orderId);
+                            if (context.mounted) {
+                              showToast(
+                                'Order deleted successfully',
+                                context: context,
+                                backgroundColor: Colors.green,
+                                textStyle: const TextStyle(color: Colors.white),
+                                position: StyledToastPosition.bottom,
+                                animation: StyledToastAnimation.slideFromBottomFade,
+                                reverseAnimation: StyledToastAnimation.fade,
+                                duration: const Duration(seconds: 4),
+                              );
+                            }
                           } catch (e) {
-                            MyAppMethods.showErrorORWarningDialog(
-                              context: context,
-                              subtitle: e.toString(),
-                              fct: () {},
-                            );
-                          } finally {
-                            setState(() {
-                              isLoading = false;
-                            });
+                            // Handle the error if needed
                           }
                         },
                         icon: const Icon(
@@ -112,7 +93,7 @@ class _OrdersWidgetState extends State<OrdersWidget> {
                       ),
                       Flexible(
                         child: SubtitleTextWidget(
-                          label: "${widget.price.toStringAsFixed(2)} \₪",
+                          label: "${price.toStringAsFixed(2)} \₪",
                           fontSize: 15,
                           color: Colors.blue,
                         ),
@@ -123,7 +104,7 @@ class _OrdersWidgetState extends State<OrdersWidget> {
                     height: 5,
                   ),
                   SubtitleTextWidget(
-                    label: "Qty: ${widget.quantity}",
+                    label: "Qty: $quantity",
                     fontSize: 15,
                   ),
                   const SizedBox(
@@ -137,7 +118,7 @@ class _OrdersWidgetState extends State<OrdersWidget> {
                     height: 5,
                   ),
                   SubtitleTextWidget(
-                    label: "User: ${widget.username}",
+                    label: "User: $username",
                     fontSize: 15,
                   ),
                 ],

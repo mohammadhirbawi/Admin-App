@@ -1,4 +1,5 @@
 import 'package:admin_app/consts/theme_data.dart';
+import 'package:admin_app/providers/orders_provider.dart';
 import 'package:admin_app/providers/product_provider.dart';
 import 'package:admin_app/providers/theme_provider.dart';
 import 'package:admin_app/screens/dashboard_screen.dart';
@@ -60,6 +61,9 @@ class MyApp extends StatelessWidget {
                 ChangeNotifierProvider(
                   create: (_) => ProductProvider(),
                 ),
+                ChangeNotifierProvider(
+                  create: (_) => OrdersProvider(),
+                ),
               ],
               child: Consumer<ThemeProvider>(builder: (
                 context,
@@ -74,8 +78,8 @@ class MyApp extends StatelessWidget {
                       context: context),
                   home: const DashboardScreen(),
                   routes: {
-                    OrdersScreenFree.routeName: (context) =>
-                        const OrdersScreenFree(),
+                    OrdersScreen.routeName: (context) =>
+                        const OrdersScreen(),
                     SearchScreen.routeName: (context) => const SearchScreen(),
                     EditOrUploadProductScreen.routeName: (context) =>
                         const EditOrUploadProductScreen(),

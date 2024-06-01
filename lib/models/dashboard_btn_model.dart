@@ -32,7 +32,7 @@ class DashBoardButtonModel {
           text: "View Orders",
           imagePath: AssetsManager.order,
           onPressed: () {
-            Navigator.pushNamed(context, OrdersScreenFree.routeName);
+            Navigator.pushNamed(context, OrdersScreen.routeName);
           },
         ),
       ];
